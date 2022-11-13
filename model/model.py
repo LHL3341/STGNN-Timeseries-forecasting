@@ -9,7 +9,7 @@ from model.embedding import TemporalConvNet
 from model.GATv2 import GATv2Conv
 from model.recon import AttentionDecoder
 from model.forecast import MLPPredicter
-from graph_structure import get_batch_edge_index
+from utils.graph_structure import get_batch_edge_index
 class Model(nn.Module):
     DEFAULTS = {}           
     def __init__(self,config) -> None:

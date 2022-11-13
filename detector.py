@@ -5,7 +5,7 @@ from torch import optim,nn
 import torch.nn.functional as F
 from dataset.data_loader import get_dataloader
 from model.model import Model
-from graph_structure import show_graph
+from utils.graph_structure import show_graph
 import time
 def loss_fn(y_pred,y_recon, y_true,x):
     p_loss = F.mse_loss(y_pred.squeeze(-1), y_true, reduction='mean')

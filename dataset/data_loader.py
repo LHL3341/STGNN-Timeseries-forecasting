@@ -5,7 +5,7 @@ import torch.nn.functional as F
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 import numpy as np
 
-from graph_structure import construct_graph
+from utils.graph_structure import construct_graph
 
 class TimeDataset(Dataset):
     DEFAULTS = {}

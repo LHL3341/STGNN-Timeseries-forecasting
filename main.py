@@ -9,21 +9,22 @@ from detector import Detector
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument('--num_epochs', type=int, default=20)
+parser.add_argument('--num_epochs', type=int, default=50)
+parser.add_argument('--pretrained_epochs',type = int,default=49)
 parser.add_argument('--lr', type=float, default=1e-3)
 parser.add_argument('--dropout', type=int, default=0.2)
-parser.add_argument('--batch_size', type=int, default=36)
+parser.add_argument('--batch_size', type=int, default=128)
 parser.add_argument('--mode', type=str, default='train', choices=['train', 'test'])
 parser.add_argument('--device', type=str, default='cpu')
 parser.add_argument('--dataset', type=str, default='msl')
-parser.add_argument('--win_size', type=int, default=20)
+parser.add_argument('--win_size', type=int, default=15)
 parser.add_argument('--feature_num', type=int, default=27)
 parser.add_argument('--hidden_size', type=int, default=64)
 parser.add_argument('--gamma', type=int, default=0.5)
 parser.add_argument('--save_path', type=str, default='result')
 
 parser.add_argument('--em_type', type=str, default='rnn')
-parser.add_argument('--emb_size', type=int, default=20)
+parser.add_argument('--emb_size', type=int, default=15)
 parser.add_argument('--graph_type', type=str, default='full')
 parser.add_argument('--gat_heads', type=int, default=1)
 
@@ -42,3 +43,7 @@ if args['device'] == 'cuda':
     torch.backends.cudnn.benchmark=True
 
 detector = Detector(args)
+if args['mode']=='train':
+    detector.train()
+else:
+    detector.test()

@@ -15,7 +15,8 @@ class Model(nn.Module):
     def __init__(self,config) -> None:
         super(Model,self).__init__()
         self.__dict__.update(Model.DEFAULTS, **config)
-        
+        if self.mode == 'test':
+            self.batch_size = 1
         self.gat = GATv2Conv(self.emb_size,self.emb_size,self.gat_heads)
         if self.em_type == 'rnn':
             self.embedding =nn.RNN(self.win_size,self.emb_size)
@@ -29,7 +30,7 @@ class Model(nn.Module):
         x = x.permute(0,2,1)
         y,_ = self.embedding(x)
         y = y.view(-1,self.emb_size)
-        edge_idx = get_batch_edge_index(edge_idx[0,:,:],self.batch_size,self.emb_size)
+        edge_idx = get_batch_edge_index(edge_idx[0,:,:],edge_idx.shape[0],self.emb_size)
         z,attn_w = self.gat(y,edge_idx,return_attention_weights=True)
         z = z.view(-1,self.emb_size,self.feature_num)
         recon = self.r(z)

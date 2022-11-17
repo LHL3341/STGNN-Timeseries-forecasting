@@ -29,6 +29,7 @@ class Detector(object):
         self.criterion = loss_fn
 
         if self.device == 'cuda':
+            self.model.to(self.device)
             self.model.cuda()
             
     def train(self):
@@ -97,6 +98,7 @@ class Detector(object):
         self.model.load_state_dict(torch.load(self.save_path+f'/{self.dataset}/epoch{self.pretrained_epochs}.pkl'))
         model = self.model
         if self.device == 'cuda':
+            self.model.to(device)
             self.model.cuda()
         now = time.time()
 

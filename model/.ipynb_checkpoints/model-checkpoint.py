@@ -7,7 +7,6 @@ from torch_geometric.utils import remove_self_loops, add_self_loops, softmax
 from torch_geometric.nn.inits import glorot, zeros
 from .embedding import TemporalConvNet
 from .GATv2 import GATv2Conv
-from .GAT import GAT_NET
 from .tcn import dilated_inception
 from .recon import AttentionDecoder
 from .forecast import MLPPredicter
@@ -22,8 +21,7 @@ class Model(nn.Module):
         self.__dict__.update(Model.DEFAULTS, **config)
         if self.mode == 'test':
             self.batch_size = 1
-        self.gat = GATv2Conv(self.emb_size,self.channels[4],self.gat_heads,dropout = self.dp_gat)
-        #self.gat = GAT_NET(self.emb_size,self.channels[4],self.channels[4],heads = self.attn_heads,dropout = self.dp_gat)
+        self.gat = GATv2Conv(self.channels[3],self.channels[4],self.gat_heads,dropout = self.dp_gat)
         print(self.gat._modules)
         #self.gat1 = GATv2Conv(self.channels[3],self.channels[4],self.gat_heads,dropout = self.dp_gat)
         #if self.em_type == 'rnn':
@@ -45,7 +43,6 @@ class Model(nn.Module):
         j_idx = torch.arange(0, nodenum).repeat(1, nodenum).to(self.device)
         self.node_edge_idx = torch.cat((i_idx,j_idx),dim=0)
         self.layernorm = nn.LayerNorm([self.feature_num,self.channels[4]])
-        
     def forward(self,x,node_edge_idx,res_edge_idx):
         batch_size=node_edge_idx.shape[0]
         if self.em_type == 'rnn':
@@ -76,13 +73,13 @@ class Model(nn.Module):
         #node_edge_idx,res_edge_idx = [item.to(self.device) for item in [node_edge_idx,res_edge_idx]]
         
         #t3 = time.time()
-        z1 = self.gat(y,node_edge_idx)
+        #z1,attn_w1 = self.gat(y,node_edge_idx,return_attention_weights=True)
         #t4 = time.time()
         #z2,attn_w2 = self.gat1(y,res_edge_idx,return_attention_weights=True)
         #z=z1+z2
-        z=z1
+        z=y
         z= z.view(-1,self.feature_num,self.channels[4]).contiguous()
-        forecast = self.f(self.layernorm(z))#self.layernorm(z))
+        forecast = self.f(z)#self.layernorm(z))
         #t5 = time.time()
         #print(t2-t1,t3-t2,t4-t3,t5-t4)
         #recon = nn.Linear(self.emb_size,self.win_size)(r).permute(0,2,1)

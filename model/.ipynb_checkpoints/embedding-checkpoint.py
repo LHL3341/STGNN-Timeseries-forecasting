@@ -31,7 +31,7 @@ class TemporalBlock(nn.Module):
         :param dropout: float, dropout比率
         """
         super(TemporalBlock, self).__init__()
-        
+        print(padding)
         self.conv1 = weight_norm(nn.Conv2d(n_inputs, n_outputs, kernel_size,
                                            stride=stride, padding=padding, dilation=dilation))
         # 经过conv1，输出的size其实是(Batch, input_channel, seq_len + padding)

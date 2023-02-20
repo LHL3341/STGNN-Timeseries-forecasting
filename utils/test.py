@@ -12,12 +12,12 @@ def get_full_err_scores(test_result):
     for i in range(feature_num):
         test_predict, test_gt = np_test_result[0,:,i].tolist(),np_test_result[1,:,i].tolist()
         # 绝对值误差
-        np_arr = np.abs(np.subtract(np.array(test_predict).squeeze(-1), np.array(test_gt)))
+        np_arr = np.abs(np.subtract(np.array(test_predict), np.array(test_gt)))
         # 取中位数和iqr
         n_err_mid = np.median(np_arr)
         n_err_iqr = iqr(np_arr)            
         test_delta = np.abs(np.subtract(
-                            np.array(test_predict).astype(np.float64).squeeze(-1), 
+                            np.array(test_predict).astype(np.float64), 
                             np.array(test_gt).astype(np.float64)
                         ))
         epsilon=1e-2
